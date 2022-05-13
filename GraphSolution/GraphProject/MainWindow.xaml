@@ -1,0 +1,79 @@
+﻿<Window x:Class="GraphProject.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GraphProject"
+        mc:Ignorable="d"
+        Title="Graph Demo" Height="550" Width="850"
+        Loaded="Window_Loaded_Init"
+        MouseDoubleClick="Window_MouseDoubleClick_CreateNode"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown_SetAllControlDefault"
+        MouseLeftButtonUp="Window_MouseLeftButtonUp_CancelDraw"
+        KeyDown="Window_KeyDown"
+        KeyUp="Window_KeyUp_CancelDraw"
+        >
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar Name="tlbOption">
+                <Button Name="btnOpen" Click="ButtonOpenFile_Click">Open file</Button>
+                <Separator/>
+                <Button Click="ButtonChangeLocation_Click">Change location</Button>
+                <Separator/>
+                <Button Click="ButtonDirected_Click">Directed</Button>
+                <Separator/>
+                <Button Click="ButtonUndirected_Click">Undirected</Button>
+                <Separator/>
+                <Button Click="ButtonClear_Click">Clear</Button>
+                <Separator/>
+                <Button Click="ButtonBFS_Click">BFS</Button>
+                <Separator/>
+                <Button Click="ButtonDFSStack_Click">DFS Stack</Button>
+                <Separator/>
+                <Button Click="ButtonTarjan_Click">Tarjan</Button>
+                <Separator/>
+                <Button Click="ButtonDFSRecursion_Click">DFS Recursion</Button>
+                <Separator/>
+                <Button Click="ButtonDijkstra_Click">Dijkstra</Button>
+                <Separator/>
+                <Button Click="ButtonBellmanFord_Click">Bellman Ford</Button>
+                <Separator/>
+                <Button Click="ButtonKruskal_Click">Kruskal</Button>
+                <Separator/>
+                <Button Click="ButtonPrim_Click">Prim</Button>
+            </ToolBar>
+        </ToolBarTray>
+
+        <Canvas 
+            x:Name="canvasMain"
+            Background="Gainsboro"
+            MouseMove="canvasMain_MouseMove_DrawEdge">
+            <!--<Grid Canvas.Left="264" Canvas.Top="161">
+                <Ellipse 
+                    Fill="LightGreen"
+                    Width="50"
+                    Height="50"
+                    Stroke="Black"
+                    StrokeThickness="2"></Ellipse>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    TextAlignment="Center"
+                    Text="text"></TextBlock>
+            </Grid>-->
+            <!--<Line
+                X1="20"
+                X2="90"
+                Y1="30"
+                Y2="140"
+                Stroke="Black"
+                StrokeThickness="2"
+                />-->
+
+            <ListView Name="lsbStatus" Width="85" Opacity="0" Background="White" >
+                <ListViewItem Background="LightBlue">1 -> 1 : 1</ListViewItem>
+                <ListViewItem Background="LightCoral">abcd</ListViewItem>
+            </ListView>
+        </Canvas>
+    </DockPanel>
+</Window>

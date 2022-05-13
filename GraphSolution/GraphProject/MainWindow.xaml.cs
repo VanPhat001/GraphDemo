@@ -95,7 +95,10 @@ namespace GraphProject
         #region methods
         private void DeleteNode(Node node)
         {
-            SelectedNode = null;
+            if (SelectedNode == node)
+            {
+                SelectedNode = null;
+            }
             node.Remove();
             this.nodeList.Remove(node);
 
@@ -107,6 +110,16 @@ namespace GraphProject
                     edge.Remove();
                     this.edgeList.RemoveAt(i);
                 }
+            }
+        }
+
+        private void DeleteEdge(Edge edge)
+        {
+            this.edgeList.Remove(edge);
+            edge.Remove();
+            if (SelectedEdge == edge)
+            {
+                SelectedEdge = null;
             }
         }
 
@@ -132,6 +145,45 @@ namespace GraphProject
                     }
                 }
             }
+        }
+
+        private string ActionWindow_Keydown(Key key, string selectObjectText)
+        {
+            if (key == Key.Space)
+            {
+                selectObjectText += " ";
+            }
+            else if (key == Key.Delete)
+            {
+                // TODO: delete node
+                if (SelectedNode != null)
+                {
+                    DeleteNode(SelectedNode);
+                }
+                else if (SelectedEdge != null)
+                {
+                    DeleteEdge(SelectedEdge);
+                }
+            }
+            else if (key == Key.Back)
+            {
+                var text = selectObjectText;
+                selectObjectText = text.Substring(0, Math.Max(text.Length - 1, 0));
+            }
+            else if (Key.A <= key && key <= Key.Z)
+            {
+                selectObjectText += (char)(key - Key.A + 'a');
+            }
+            else if (Key.D0 <= key && key <= Key.D9)
+            {
+                selectObjectText += (char)(key - Key.D0 + '0');
+            }
+            else if (Key.NumPad0 <= key && key <= Key.NumPad9)
+            {
+                selectObjectText += (char)(key - Key.NumPad0 + '0');
+            }
+
+            return selectObjectText;
         }
 
         public void ShowNodeTitle(bool isShow)
@@ -305,65 +357,12 @@ namespace GraphProject
         {
             if (SelectedNode != null)
             {
-                if (e.Key == Key.Space)
-                {
-                    SelectedNode.Text += " ";
-                }
-                else if (e.Key == Key.Delete)
-                {
-                    // TODO: delete node
-                    DeleteNode(SelectedNode);
-                }
-                else if (e.Key == Key.Back)
-                {
-                    var text = SelectedNode.Text;
-                    SelectedNode.Text = text.Substring(0, Math.Max(text.Length - 1, 0));
-                }
-                else if (Key.A <= e.Key && e.Key <= Key.Z)
-                {
-                    SelectedNode.Text += (char)(e.Key - Key.A + 'a');
-                }
-                else if (Key.D0 <= e.Key && e.Key <= Key.D9)
-                {
-                    SelectedNode.Text += (char)(e.Key - Key.D0 + '0');
-                }
-                else if (Key.NumPad0 <= e.Key && e.Key <= Key.NumPad9)
-                {
-                    SelectedNode.Text += (char)(e.Key - Key.NumPad0 + '0');
-                }
+                SelectedNode.Text = ActionWindow_Keydown(e.Key, SelectedNode.Text);
             }
             else if (SelectedEdge != null)
             {
-                if (e.Key == Key.Space)
-                {
-                    SelectedEdge.Text += " ";
-                }
-                else if (e.Key == Key.Delete)
-                {
-                    // TODO: delete edge
-                    this.edgeList.Remove(SelectedEdge);
-                    SelectedEdge.Remove();
-                    SelectedEdge = null;
-                }
-                else if (e.Key == Key.Back)
-                {
-                    var text = SelectedEdge.Text;
-                    SelectedEdge.Text = text.Substring(0, Math.Max(text.Length - 1, 0));
-                }
-                else if (Key.A <= e.Key && e.Key <= Key.Z)
-                {
-                    SelectedEdge.Text += (char)(e.Key - Key.A + 'a');
-                }
-                else if (Key.D0 <= e.Key && e.Key <= Key.D9)
-                {
-                    SelectedEdge.Text += (char)(e.Key - Key.D0 + '0');
-                }
-                else if (Key.NumPad0 <= e.Key && e.Key <= Key.NumPad9)
-                {
-                    SelectedEdge.Text += (char)(e.Key - Key.NumPad0 + '0');
-                }
+                SelectedEdge.Text = ActionWindow_Keydown(e.Key, SelectedEdge.Text);
             }
-
         }
 
         private void Window_KeyUp_CancelDraw(object sender, KeyEventArgs e)
@@ -431,9 +430,7 @@ namespace GraphProject
         {
             e.Handled = true;
             var edge = sender as Edge;
-            edge.Remove();
-            SelectedEdge = null;
-            this.edgeList.Remove(edge);
+            DeleteEdge(edge);
         }
 
         private void Edge_Click_SelectEdge(object sender, MouseButtonEventArgs e)

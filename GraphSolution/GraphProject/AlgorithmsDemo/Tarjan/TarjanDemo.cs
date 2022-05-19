@@ -20,13 +20,7 @@ namespace GraphProject.AlgorithmsDemo.Tarjan
         private int current;
         private Brush[] colorList;
         private List<TarjanMessage> messageList;
-        private bool isRunning;
         private readonly static int TimeSleep = 450;
-
-        public bool IsRunning
-        {
-            get => isRunning;
-        }
 
         public TarjanDemo(List<Node> nodeList, List<Edge> edgeList, bool isDirectedGraph)
         {
@@ -39,7 +33,6 @@ namespace GraphProject.AlgorithmsDemo.Tarjan
             colorList = new Brush[neighbour.CountNode];
             current = -1;
 
-            this.isRunning = false;
         }
 
         private void Init()
@@ -136,8 +129,6 @@ namespace GraphProject.AlgorithmsDemo.Tarjan
 
         public async Task Run()
         {
-            isRunning = true;
-
             Init();
 
             Tarjan(0);
@@ -145,8 +136,6 @@ namespace GraphProject.AlgorithmsDemo.Tarjan
             //messageList.Add(new TarjanMessage(TarjanDigits.SpanningTree, new List<int>() { 0 }));
 
             await ShowAnimation();
-
-            isRunning = false;
         }
 
         private async Task ShowAnimation()

@@ -39,6 +39,16 @@ namespace GraphProject.Structures
         }
         #endregion
 
+
+        #region methods
+        public bool CheckAdjacent(int uIndex, int vIndex)
+        {
+            var p = neighbour[uIndex].Find((pair) => pair.NodeIndex == vIndex);
+            return p != null;
+        }
+        #endregion
+
+
         #region getters
         public List<int> GetNeighbourOf(int nodeIndex)
         {
@@ -88,6 +98,45 @@ namespace GraphProject.Structures
             {
                 return 0;
             }
+        }
+
+        public int GetInDegree(int nodeIndex)
+        {
+            int count = 0;
+            foreach (var edge in this.edgeList)
+            {
+                if ((int)edge.VNode.Tag == nodeIndex)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public int GetOutDegree(int nodeIndex)
+        {
+            return this.neighbour[nodeIndex].Count;
+        }
+
+        public List<NodeDegree> GetListDegree()
+        {
+            List<NodeDegree> list = new List<NodeDegree>();
+
+            for (int i = 0; i < CountNode; i++)
+            {
+                list.Add(new NodeDegree(0, 0));
+            }
+
+            foreach (var edge in edgeList)
+            {
+                int uIndex = (int)edge.UNode.Tag;
+                int vIndex = (int)edge.VNode.Tag;
+
+                list[uIndex].OutDegree++;
+                list[vIndex].InDegree++;
+            }
+
+            return list;
         }
         #endregion
     }

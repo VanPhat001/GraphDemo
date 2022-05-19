@@ -16,15 +16,9 @@ namespace GraphProject.AlgorithmsDemo.BellmanFord
         private int[] parent;
         private int[] cost;
         private List<BellmanFordMessage> messageList;
-        private bool isRunning;
         private readonly static int TimeSleep = MainWindow.TimeSleep;
         private readonly static int oo = 99999999;
         private readonly MyListViewControl myListViewControl;
-
-        public bool IsRunning
-        {
-            get => isRunning;
-        }
 
         public BellmanFordDemo(List<Node> nodeList, List<Edge> edgeList, bool isDirectedGraph, MyListViewControl myListViewControl)
         {
@@ -33,7 +27,6 @@ namespace GraphProject.AlgorithmsDemo.BellmanFord
             parent = new int[edgeGraph.CountNode];
             cost = new int[edgeGraph.CountNode];
             this.myListViewControl = myListViewControl;
-            this.isRunning = false;
         }
 
         private void Init()
@@ -121,8 +114,6 @@ namespace GraphProject.AlgorithmsDemo.BellmanFord
 
         public async Task Run(Node startNode)
         {
-            isRunning = true;
-
             Init();
 
             BellmanFord((int)startNode.Tag);
@@ -130,8 +121,6 @@ namespace GraphProject.AlgorithmsDemo.BellmanFord
             messageList.Add(new BellmanFordMessage(BellmanFordDigits.SpanningTree));
 
             await ShowAnimation();
-
-            isRunning = false;
         }
 
         private async Task ShowAnimation()

@@ -19,8 +19,10 @@ using GraphProject.AlgorithmsDemo.BFS;
 using GraphProject.AlgorithmsDemo.DFS;
 using GraphProject.AlgorithmsDemo.Dijkstra;
 using GraphProject.AlgorithmsDemo.Kruskal;
+using GraphProject.AlgorithmsDemo.PlanningAlgorithm;
 using GraphProject.AlgorithmsDemo.Prim;
 using GraphProject.AlgorithmsDemo.Tarjan;
+using GraphProject.AlgorithmsDemo.TopoSort;
 using GraphProject.ObjectDisplay;
 using Microsoft.Win32;
 
@@ -38,7 +40,7 @@ namespace GraphProject
         private List<Node> nodeList;
         private List<Edge> edgeList;
         private bool isDirectedGraph;
-        public static int TimeSleep = 750;
+        public static int TimeSleep = 50;
         #endregion
 
         #region properties
@@ -256,13 +258,13 @@ namespace GraphProject
             Tuple<int, int, int>[] info = new Tuple<int, int, int>[lines.Length - 1];
             for (int i = 1; i < lines.Length; i++)
             {
-                string line = lines[i];
+                string line = lines[i].Trim();
                 var items = line.Split(' ');
 
                 int uNode, vNode, edgeValue = 0;
                 if (items.Length < 2 || 3 < items.Length)
                 {
-                    MessageBox.Show($"Dòng { i + 1} trong { sourceName} sai cú pháp! - [Cú pháp: UNode VNode Weight]\nhoặc [Cú pháp: Unode Vnode]");
+                    MessageBox.Show($"Dòng {i + 1} trong { sourceName} sai cú pháp! - [Cú pháp: UNode VNode Weight]\nhoặc [Cú pháp: Unode Vnode]");
                     return;
                 }
                 if (!Int32.TryParse(items[0], out uNode))
@@ -319,6 +321,23 @@ namespace GraphProject
             }
 
             Debug.WriteLine("read graph done!!!");
+        }
+
+        private async Task ExecuteAlgorithm(Func<Task> callback)
+        {
+            SetAllControlDefault();
+            ShowNodeTitle(true);
+            tlbOption.IsEnabled = false;
+
+            #region main code
+            await callback();
+            #endregion
+
+            tlbOption.IsEnabled = true;
+            ShowNodeTitle(false);
+            SetAllControlDefault();
+            SelectedEdge = null;
+            SelectedNode = null;
         }
         #endregion
 
@@ -453,6 +472,31 @@ namespace GraphProject
             }
         }
 
+        private void btnSaveGraph_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string source = saveFileDialog.FileName;
+
+                for (int i = 0; i < nodeList.Count; i++)
+                {
+                    nodeList[i].Tag = i;
+                }
+
+                string[] lines = new string[edgeList.Count + 1];
+                lines[0] = nodeList.Count.ToString();
+
+                for (int i = 0; i < edgeList.Count; i++)
+                {
+                    var edge = edgeList[i];
+                    lines[i + 1] = $"{(int)edge.UNode.Tag + 1} {(int)edge.VNode.Tag + 1} {edge.Text}";
+                }
+
+                File.WriteAllLines(source, lines);
+            }
+        }
+
         private void ButtonChangeLocation_Click(object sender, RoutedEventArgs e)
         {
             Random rand = new Random();
@@ -504,224 +548,156 @@ namespace GraphProject
 
         private async void ButtonBFS_Click(object sender, RoutedEventArgs e)
         {
-            SetAllControlDefault();
-            ShowNodeTitle(true);
-            tlbOption.IsEnabled = false;
-
-            #region main code
-            BFSDemo bfs = new BFSDemo(nodeList, edgeList, isDirectedGraph);
-            await bfs.Run();
-
-            while (bfs.IsRunning)
+            await ExecuteAlgorithm(async () =>
             {
-                Task.Delay(200).Wait();
-            }
-            #endregion
-
-            MessageBox.Show("finish");
-            tlbOption.IsEnabled = true;
-            ShowNodeTitle(false);
-            SetAllControlDefault();
+                BFSDemo bfs = new BFSDemo(nodeList, edgeList, isDirectedGraph);
+                await bfs.Run();
+                MessageBox.Show("finish");
+            });
         }
 
         private async void ButtonDFSStack_Click(object sender, RoutedEventArgs e)
         {
-            SetAllControlDefault();
-            ShowNodeTitle(true);
-            tlbOption.IsEnabled = false;
-
-            #region main code
-            DFSDemo dfs = new DFSDemo(nodeList, edgeList, isDirectedGraph);
-            await dfs.Run(useStack: true);
-
-            while (dfs.IsRunning)
+            await ExecuteAlgorithm(async () =>
             {
-                Task.Delay(200).Wait();
-            }
-            #endregion
-
-            MessageBox.Show("finish");
-            tlbOption.IsEnabled = true;
-            ShowNodeTitle(false);
-            SetAllControlDefault();
+                DFSDemo dfs = new DFSDemo(nodeList, edgeList, isDirectedGraph);
+                await dfs.Run(useStack: true);
+                MessageBox.Show("finish");
+            });
         }
 
         private async void ButtonDFSRecursion_Click(object sender, RoutedEventArgs e)
         {
-            SetAllControlDefault();
-            ShowNodeTitle(true);
-            tlbOption.IsEnabled = false;
-
-            #region main code
-            DFSDemo dfs = new DFSDemo(nodeList, edgeList, isDirectedGraph);
-            await dfs.Run(useStack: false);
-
-            while (dfs.IsRunning)
+            await ExecuteAlgorithm(async () =>
             {
-                Task.Delay(200).Wait();
-            }
-            #endregion
-
-            MessageBox.Show("finish");
-            tlbOption.IsEnabled = true;
-            ShowNodeTitle(false);
-            SetAllControlDefault();
+                DFSDemo dfs = new DFSDemo(nodeList, edgeList, isDirectedGraph);
+                await dfs.Run(useStack: false);
+                MessageBox.Show("finish");
+            });
         }
 
         private async void ButtonTarjan_Click(object sender, RoutedEventArgs e)
         {
-            SetAllControlDefault();
-            ShowNodeTitle(true);
-            tlbOption.IsEnabled = false;
-
-            #region main code
-            if (isDirectedGraph == false)
+            await ExecuteAlgorithm(async () =>
             {
-                MessageBox.Show("Can't run algorithm with undirected graph");
-            }
-            else
-            {
-                TarjanDemo tarjan = new TarjanDemo(nodeList, edgeList, isDirectedGraph);
-                await tarjan.Run();
-
-                while (tarjan.IsRunning)
+                if (isDirectedGraph == false)
                 {
-                    Task.Delay(200).Wait();
+                    MessageBox.Show("Can't run algorithm with undirected graph");
                 }
-
-                MessageBox.Show("finish");
-            }
-            #endregion
-
-            tlbOption.IsEnabled = true;
-            ShowNodeTitle(false);
-            SetAllControlDefault();
+                else
+                {
+                    TarjanDemo tarjan = new TarjanDemo(nodeList, edgeList, isDirectedGraph);
+                    await tarjan.Run();
+                    MessageBox.Show("finish");
+                }
+            });
         }
 
         private async void ButtonDijkstra_Click(object sender, RoutedEventArgs e)
         {
-            SetAllControlDefault();
-            ShowNodeTitle(true);
-            tlbOption.IsEnabled = false;
-
-            #region main code
-            if (SelectedNode == null)
+            await ExecuteAlgorithm(async () =>
             {
-                MessageBox.Show("Select one node before run Dijkstra algorithm");
-            }
-            else
-            {
-                DijkstraDemo dijkstra = new DijkstraDemo(nodeList, edgeList, isDirectedGraph);
-                await dijkstra.Run(SelectedNode);
-
-                while (dijkstra.IsRunning)
+                if (SelectedNode == null)
                 {
-                    Task.Delay(200).Wait();
+                    MessageBox.Show("Select one node before run Dijkstra algorithm");
                 }
-
-                MessageBox.Show("finish");
-            }
-            #endregion
-
-            tlbOption.IsEnabled = true;
-            ShowNodeTitle(false);
-            SetAllControlDefault();
+                else
+                {
+                    DijkstraDemo dijkstra = new DijkstraDemo(nodeList, edgeList, isDirectedGraph);
+                    await dijkstra.Run(SelectedNode);
+                    MessageBox.Show("finish");
+                }
+            });
         }
 
         private async void ButtonBellmanFord_Click(object sender, RoutedEventArgs e)
         {
-            SetAllControlDefault();
-            ShowNodeTitle(true);
-            tlbOption.IsEnabled = false;
-
-            #region main code
-            if (SelectedNode == null)
+            await ExecuteAlgorithm(async () =>
             {
-                MessageBox.Show("Select one node before run Dijkstra algorithm");
-            }
-            else
-            {
-                var myListViewControl = new MyListViewControl(lsbStatus);
-                BellmanFordDemo bellmanFord = new BellmanFordDemo(nodeList, edgeList, isDirectedGraph, myListViewControl);
-                await bellmanFord.Run(SelectedNode);
-
-                while (bellmanFord.IsRunning)
+                if (SelectedNode == null)
                 {
-                    Task.Delay(200).Wait();
+                    MessageBox.Show("Select one node before run Dijkstra algorithm");
                 }
-
-                MessageBox.Show("finish");
-                myListViewControl.SetHidden();
-            }
-            #endregion
-
-            tlbOption.IsEnabled = true;
-            ShowNodeTitle(false);
-            SetAllControlDefault();
+                else
+                {
+                    var myListViewControl = new MyListViewControl(lsbStatus);
+                    BellmanFordDemo bellmanFord = new BellmanFordDemo(nodeList, edgeList, isDirectedGraph, myListViewControl);
+                    await bellmanFord.Run(SelectedNode);
+                    MessageBox.Show("finish");
+                    myListViewControl.SetHidden();
+                }
+            });
         }
 
         private async void ButtonKruskal_Click(object sender, RoutedEventArgs e)
         {
-            SetAllControlDefault();
-            ShowNodeTitle(true);
-            tlbOption.IsEnabled = false;
-
-            #region main code
-            if (isDirectedGraph)
+            await ExecuteAlgorithm(async () =>
             {
-                MessageBox.Show("Can't run algorithm with directed graph");
-            }
-            else
-            {
-                var myListViewControl = new MyListViewControl(lsbStatus);
-                KruskalDemo kruskal = new KruskalDemo(nodeList, edgeList, isDirectedGraph, myListViewControl);
-                await kruskal.Run();
-
-                while (kruskal.IsRunning)
+                if (isDirectedGraph)
                 {
-                    Task.Delay(200).Wait();
+                    MessageBox.Show("Can't run algorithm with directed graph");
                 }
-
-                MessageBox.Show("finish");
-                myListViewControl.SetHidden();
-            }
-            #endregion
-
-            tlbOption.IsEnabled = true;
-            ShowNodeTitle(false);
-            SetAllControlDefault();
+                else
+                {
+                    var myListViewControl = new MyListViewControl(lsbStatus);
+                    KruskalDemo kruskal = new KruskalDemo(nodeList, edgeList, isDirectedGraph, myListViewControl);
+                    await kruskal.Run();
+                    MessageBox.Show("finish");
+                    myListViewControl.SetHidden();
+                }
+            });
         }
 
         private async void ButtonPrim_Click(object sender, RoutedEventArgs e)
         {
-            SetAllControlDefault();
-            ShowNodeTitle(true);
-            tlbOption.IsEnabled = false;
-
-            #region main code
-            if (isDirectedGraph)
+            await ExecuteAlgorithm(async () =>
             {
-                MessageBox.Show("Can't run algorithm with directed graph");
-            }
-            else
-            {
-                PrimDemo prim = new PrimDemo(nodeList, edgeList, isDirectedGraph);
-                await prim.Run();
-
-                while (prim.IsRunning)
+                if (isDirectedGraph)
                 {
-                    Task.Delay(200).Wait();
+                    MessageBox.Show("Can't run algorithm with directed graph");
                 }
+                else
+                {
+                    PrimDemo prim = new PrimDemo(nodeList, edgeList, isDirectedGraph);
+                    await prim.Run();
+                    MessageBox.Show("finish");
+                }
+            });
+        }
 
-                MessageBox.Show("finish");
-            }
-            #endregion
+        private async void ButtonTopoSort_Click(object sender, RoutedEventArgs e)
+        {
+            await ExecuteAlgorithm(async () =>
+            {
+                if (!isDirectedGraph)
+                {
+                    MessageBox.Show("Can't run algorithm with undirected graph");
+                }
+                else
+                {
+                    TopoSortDemo topo = new TopoSortDemo(nodeList, edgeList, isDirectedGraph);
+                    await topo.Run(new Size(canvasMain.ActualWidth, canvasMain.ActualHeight));
+                    MessageBox.Show("finish");
+                }
+            });
+        }
 
-            tlbOption.IsEnabled = true;
-            ShowNodeTitle(false);
-            SetAllControlDefault();
+        private async void ButtonPlanning_Click(object sender, RoutedEventArgs e)
+        {
+            await ExecuteAlgorithm(async () =>
+            {
+                if (!isDirectedGraph)
+                {
+                    MessageBox.Show("Can't run algorithm with undirected graph");
+                }
+                else
+                {
+                    PlanningAlgorithmDemo planning = new PlanningAlgorithmDemo(canvasMain, nodeList, edgeList, isDirectedGraph);
+                    await planning.Run(new Size(canvasMain.ActualWidth, canvasMain.ActualHeight));
+                    MessageBox.Show("finish");
+                }
+            });
         }
         #endregion
-
     }
 }

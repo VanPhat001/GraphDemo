@@ -16,13 +16,8 @@ namespace GraphProject.AlgorithmsDemo.DFS
         private bool[] mark;
         private int[] parent;
         private List<DFSMessage> messageList;
-        private bool isRunning;
         private readonly static int TimeSleep = MainWindow.TimeSleep;
 
-        public bool IsRunning
-        {
-            get => isRunning;
-        }
 
         public DFSDemo(List<Node> nodeList, List<Edge> edgeList, bool isDirectedGraph)
         {
@@ -30,7 +25,6 @@ namespace GraphProject.AlgorithmsDemo.DFS
             messageList = new List<DFSMessage>();
             mark = new bool[neighbour.CountNode];
             parent = new int[neighbour.CountNode];
-            this.isRunning = false;
         }
 
         private void Init()
@@ -116,8 +110,6 @@ namespace GraphProject.AlgorithmsDemo.DFS
 
         public async Task Run(bool useStack)
         {
-            isRunning = true;
-
             Init();
 
             DFS(0, useStack);
@@ -125,8 +117,6 @@ namespace GraphProject.AlgorithmsDemo.DFS
             messageList.Add(new DFSMessage(DFSDigits.SpanningTree, new List<int>() { 0 }));
 
             await ShowAnimation();
-
-            isRunning = false;
         }
 
         private async Task ShowAnimation()

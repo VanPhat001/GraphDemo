@@ -16,14 +16,8 @@ namespace GraphProject.AlgorithmsDemo.Kruskal
         private List<KruskalMessage> messageList;
         private int[] parent;
         private List<int> selectEdgesIndex;
-        private bool isRunning;
         private readonly static int TimeSleep = 300;
         private readonly MyListViewControl myListViewControl;
-
-        public bool IsRunning
-        {
-            get => isRunning;
-        }
 
         public KruskalDemo(List<Node> nodeList, List<Edge> edgeList, bool isDirectedGraph, MyListViewControl myListViewControl)
         {
@@ -32,7 +26,6 @@ namespace GraphProject.AlgorithmsDemo.Kruskal
             parent = new int[edgeGraph.CountNode];
             this.selectEdgesIndex = new List<int>();
             this.myListViewControl = myListViewControl;
-            this.isRunning = false;
         }
 
         private void Init()
@@ -98,8 +91,6 @@ namespace GraphProject.AlgorithmsDemo.Kruskal
 
         public async Task Run()
         {
-            isRunning = true;
-
             Init();
 
             Kruskal();
@@ -107,8 +98,6 @@ namespace GraphProject.AlgorithmsDemo.Kruskal
             this.messageList.Add(new KruskalMessage(KruskalDigits.SpanningTree, edgeIndex: 0));
 
             await ShowAnimation();
-
-            isRunning = false;
         }
 
         private async Task ShowAnimation()

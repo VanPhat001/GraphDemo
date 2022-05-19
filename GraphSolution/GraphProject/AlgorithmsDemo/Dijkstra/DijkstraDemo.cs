@@ -18,14 +18,8 @@ namespace GraphProject.AlgorithmsDemo.Dijkstra
         private int[] parent;
         private int[] cost;
         private List<DijkstraMessage> messageList;
-        private bool isRunning;
         private readonly static int TimeSleep = MainWindow.TimeSleep;
         public readonly static int oo = 99999999;
-
-        public bool IsRunning
-        {
-            get => isRunning;
-        }
 
         public DijkstraDemo(List<Node> nodeList, List<Edge> edgeList, bool isDirectedGraph)
         {
@@ -34,7 +28,6 @@ namespace GraphProject.AlgorithmsDemo.Dijkstra
             mark = new bool[neighbour.CountNode];
             parent = new int[neighbour.CountNode];
             cost = new int[neighbour.CountNode];
-            this.isRunning = false;
         }
 
         private void Init()
@@ -129,8 +122,6 @@ namespace GraphProject.AlgorithmsDemo.Dijkstra
 
         public async Task Run(Node startNode)
         {
-            isRunning = true;
-
             Init();
 
             Dijkstra((int)startNode.Tag);
@@ -138,8 +129,6 @@ namespace GraphProject.AlgorithmsDemo.Dijkstra
             messageList.Add(new DijkstraMessage(DijkstraDigits.SpanningTree, dataList: new List<int>() { 0 }));
 
             await ShowAnimation();
-
-            isRunning = false;
         }
 
         private async Task ShowAnimation()

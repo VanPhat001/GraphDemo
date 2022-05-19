@@ -18,6 +18,8 @@
             <ToolBar Name="tlbOption">
                 <Button Name="btnOpen" Click="ButtonOpenFile_Click">Open file</Button>
                 <Separator/>
+                <Button Name="btnSaveGraph" Click="btnSaveGraph_Click">Save graph</Button>
+                <Separator/>                
                 <Button Click="ButtonChangeLocation_Click">Change location</Button>
                 <Separator/>
                 <Button Click="ButtonDirected_Click">Directed</Button>
@@ -41,6 +43,10 @@
                 <Button Click="ButtonKruskal_Click">Kruskal</Button>
                 <Separator/>
                 <Button Click="ButtonPrim_Click">Prim</Button>
+                <Separator/>
+                <Button Click="ButtonTopoSort_Click">Topo Sort</Button>
+                <Separator/>
+                <Button Click="ButtonPlanning_Click">Planning</Button>
             </ToolBar>
         </ToolBarTray>
 

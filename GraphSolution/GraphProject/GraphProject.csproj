@@ -70,16 +70,23 @@
     <Compile Include="AlgorithmsDemo\Kruskal\KruskalDemo.cs" />
     <Compile Include="AlgorithmsDemo\Kruskal\KruskalDigits.cs" />
     <Compile Include="AlgorithmsDemo\Kruskal\KruskalMessage.cs" />
+    <Compile Include="AlgorithmsDemo\PlanningAlgorithm\PlanningAlgorithmDemo.cs" />
+    <Compile Include="AlgorithmsDemo\PlanningAlgorithm\PlanningAlgorithmDigits.cs" />
+    <Compile Include="AlgorithmsDemo\PlanningAlgorithm\PlanningAlgorithmMessage.cs" />
     <Compile Include="AlgorithmsDemo\Prim\PrimDemo.cs" />
     <Compile Include="AlgorithmsDemo\Prim\PrimDigits.cs" />
     <Compile Include="AlgorithmsDemo\Prim\PrimMessage.cs" />
     <Compile Include="AlgorithmsDemo\Tarjan\TarjanDemo.cs" />
     <Compile Include="AlgorithmsDemo\Tarjan\TarjanDigits.cs" />
     <Compile Include="AlgorithmsDemo\Tarjan\TarjanMessage.cs" />
+    <Compile Include="AlgorithmsDemo\TopoSort\TopoSortDemo.cs" />
+    <Compile Include="AlgorithmsDemo\TopoSort\TopoSortDigits.cs" />
+    <Compile Include="AlgorithmsDemo\TopoSort\TopoSortMessage.cs" />
     <Compile Include="MyListViewControl.cs" />
     <Compile Include="Structures\EdgeGraph.cs" />
     <Compile Include="Structures\EdgeInfo.cs" />
     <Compile Include="Structures\NeighbourhoodGraph.cs" />
+    <Compile Include="Structures\NodeDegree.cs" />
     <Compile Include="Structures\PairNodeEdge.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -17,14 +17,8 @@ namespace GraphProject.AlgorithmsDemo.Prim
         private bool[] mark;
         private int[] cost;
         private int[] parent;
-        private bool isRunning;
         private readonly static int TimeSleep = 300;
         private readonly static int oo = 99999999;
-
-        public bool IsRunning
-        {
-            get => isRunning;
-        }
 
         public PrimDemo(List<Node> nodeList, List<Edge> edgeList, bool isDirectedGraph)
         {
@@ -33,7 +27,6 @@ namespace GraphProject.AlgorithmsDemo.Prim
             mark = new bool[neighbour.CountNode];
             cost = new int[neighbour.CountNode];
             parent = new int[neighbour.CountNode];
-            this.isRunning = false;
         }
 
         private void Init()
@@ -121,8 +114,6 @@ namespace GraphProject.AlgorithmsDemo.Prim
 
         public async Task Run()
         {
-            isRunning = true;
-
             Init();
 
             Prim(0);
@@ -130,8 +121,6 @@ namespace GraphProject.AlgorithmsDemo.Prim
             messageList.Add(new PrimMessage(PrimDigits.SpanningTree));
 
             await ShowAnimation();
-
-            isRunning = false;
         }
 
         private async Task ShowAnimation()

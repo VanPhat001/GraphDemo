@@ -17,7 +17,7 @@ namespace GraphProject.AlgorithmsDemo.Prim
         private bool[] mark;
         private int[] cost;
         private int[] parent;
-        private readonly static int TimeSleep = 300;
+        private readonly static int TimeSleep = MainWindow.TimeSleep;
         private readonly static int oo = 99999999;
 
         public PrimDemo(List<Node> nodeList, List<Edge> edgeList, bool isDirectedGraph)

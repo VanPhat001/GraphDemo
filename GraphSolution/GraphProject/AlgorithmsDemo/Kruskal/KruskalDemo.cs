@@ -16,7 +16,7 @@ namespace GraphProject.AlgorithmsDemo.Kruskal
         private List<KruskalMessage> messageList;
         private int[] parent;
         private List<int> selectEdgesIndex;
-        private readonly static int TimeSleep = 300;
+        private readonly static int TimeSleep = MainWindow.TimeSleep;
         private readonly MyListViewControl myListViewControl;
 
         public KruskalDemo(List<Node> nodeList, List<Edge> edgeList, bool isDirectedGraph, MyListViewControl myListViewControl)

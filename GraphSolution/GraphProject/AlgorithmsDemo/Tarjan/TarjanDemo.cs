@@ -20,7 +20,7 @@ namespace GraphProject.AlgorithmsDemo.Tarjan
         private int current;
         private Brush[] colorList;
         private List<TarjanMessage> messageList;
-        private readonly static int TimeSleep = 450;
+        private readonly static int TimeSleep = MainWindow.TimeSleep;
 
         public TarjanDemo(List<Node> nodeList, List<Edge> edgeList, bool isDirectedGraph)
         {

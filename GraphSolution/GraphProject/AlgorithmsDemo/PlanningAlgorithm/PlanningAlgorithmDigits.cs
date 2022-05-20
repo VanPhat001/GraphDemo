@@ -8,5 +8,10 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
 {
     public enum PlanningAlgorithmDigits
     {
+        SelectNode,
+        SelectEdge,
+        UpdateNode,
+        DefaultEdge,
+        tComplete
     }
 }

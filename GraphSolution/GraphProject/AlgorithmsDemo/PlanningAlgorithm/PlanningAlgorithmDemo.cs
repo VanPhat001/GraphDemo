@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
 {
@@ -35,10 +36,8 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
 
             neighbour = new NeighbourhoodGraph(nodeList, edgeList, isDirectedGraph);
 
-
             this.alphaNode.SetLocate(new Point(0, 0));
             this.betaNode.SetLocate(new Point(0, 0));
-            //this.alphaNode.Click += Node_Click_SelectNode;
 
             AddAlphaBetaNode();
         }
@@ -53,8 +52,7 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
 
                 if (nodeDegree.InDegree == 0)
                 {
-                    Edge aphaLink = new Edge(canvas, alphaNode, nodeList[i], "0");
-                   
+                    Edge aphaLink = new Edge(canvas, alphaNode, nodeList[i], "0");                   
                     this.edgeList.Add(aphaLink);
                 }
                 if (nodeDegree.OutDegree == 0)
@@ -100,6 +98,7 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
             foreach (var node in nodeList)
             {
                 node.Title = $"id = {(int)node.Tag}\nt = {0}\nT = {oo}";
+                node.SetDefaultStatus();
             }
         }
 
@@ -108,6 +107,7 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
             int[] t = new int[neighbour.CountNode];
             int[] T = new int[neighbour.CountNode];
 
+            // create orderNode
             List<int> orderNode = new List<int>();
             for (int i = 0; i < Order.Count; i++)
             {
@@ -117,33 +117,108 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
                 }
             }
 
+            // init data
             for (int i = 0; i < t.Length; i++)
             {
                 t[i] = 0;
                 T[i] = oo;
             }
 
+            // build t[]
             foreach (int uIndex in orderNode)
             {
+                // [SelectNode]
                 var neighbourUNode = neighbour.GetNeighbourOf(uIndex);
+                this.messageList.Add(new PlanningAlgorithmMessage(
+                    PlanningAlgorithmDigits.SelectNode,
+                    nodeIndex: uIndex));
+
+
                 foreach (int vIndex in neighbourUNode)
                 {
-                    t[vIndex] = Math.Max(t[uIndex] + neighbour.GetWeight(uIndex, vIndex), t[vIndex]);
+                    // [SelectEdge]
+                    var oddValue = t[vIndex];
+                    var edge = neighbour.GetEdge(uIndex, vIndex);
+                    t[vIndex] = Math.Max(t[uIndex] + neighbour.GetWeight(edge), t[vIndex]);
+                    this.messageList.Add(new PlanningAlgorithmMessage(
+                        PlanningAlgorithmDigits.SelectEdge,
+                        edgeIndex: (int)edge.Tag));
+
+
+                    if (oddValue != t[vIndex])
+                    {
+                        // [UpdateNode]
+                        this.messageList.Add(new PlanningAlgorithmMessage(
+                            PlanningAlgorithmDigits.UpdateNode, 
+                            nodeIndex: vIndex,
+                            dataList: new List<int>() { t[vIndex], T[vIndex] }));
+                    }
+
+                    // [DefaultEdge]
+                    this.messageList.Add(new PlanningAlgorithmMessage(
+                        PlanningAlgorithmDigits.DefaultEdge,
+                        edgeIndex: (int)edge.Tag));
                 }
             }
 
+            // [tComplete]
+            this.messageList.Add(new PlanningAlgorithmMessage(PlanningAlgorithmDigits.tComplete));
+
+
+            // build T[]
+            // [UpdateNode]
             T[(int)betaNode.Tag] = t[(int)betaNode.Tag];
+            this.messageList.Add(new PlanningAlgorithmMessage(
+                PlanningAlgorithmDigits.UpdateNode, 
+                nodeIndex: (int)betaNode.Tag,
+                dataList: new List<int>() { t[(int)betaNode.Tag], T[(int)betaNode.Tag]}));
+
+
             for (int i = orderNode.Count - 1; i >= 0; i--)
             {
+                // [SelectNode]
                 int vIndex = orderNode[i];
+                this.messageList.Add(new PlanningAlgorithmMessage(
+                    PlanningAlgorithmDigits.SelectNode,
+                    nodeIndex: vIndex));
+
+
                 for (int uIndex = 0; uIndex < neighbour.CountNode; uIndex++)
                 {
                     if (neighbour.CheckAdjacent(uIndex, vIndex))
                     {
-                        T[uIndex] = Math.Min(T[uIndex], t[vIndex] - neighbour.GetWeight(uIndex, vIndex));
+                        // [SelectEdge]
+                        var edge = neighbour.GetEdge(uIndex, vIndex);
+                        var oddValue = T[uIndex];
+                        T[uIndex] = Math.Min(T[uIndex], t[vIndex] - neighbour.GetWeight(edge));
+                        this.messageList.Add(new PlanningAlgorithmMessage(
+                            PlanningAlgorithmDigits.SelectEdge,
+                            edgeIndex: (int)edge.Tag));
+
+
+                        if (oddValue != T[uIndex])
+                        {
+                            // [UpdateNode]
+                            this.messageList.Add(new PlanningAlgorithmMessage(
+                                PlanningAlgorithmDigits.UpdateNode,
+                                nodeIndex: uIndex,
+                                dataList: new List<int>() { t[uIndex], T[uIndex] }));
+                        }
+
+                        // [DefaultEdge]
+                        this.messageList.Add(new PlanningAlgorithmMessage(
+                            PlanningAlgorithmDigits.DefaultEdge,
+                            edgeIndex: (int)edge.Tag));
                     }
                 }
             }
+
+            // show result
+            //for (int i = 0; i < neighbour.CountNode; i++)
+            //{
+            //    var node = neighbour.GetNode(i);
+            //    node.Title = $"id = {(int)node.Tag}\nt = {t[i]}\nT = {T[i]}";
+            //}
         }
 
         public async Task Run(Size windowSize)
@@ -157,16 +232,75 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
 
             PlanningAlgorithm(topo.Order);
 
-            ShowAnimation();
+            await ShowAnimation();
 
+            await Task.Delay(1);
 
             MessageBox.Show("finish");
             RemoveAlphaBetaNode();
         }
 
-        private void ShowAnimation()
+        private async Task ShowAnimation()
         {
+            var nodeTitleFontSize = neighbour.GetNode(0).TitleFontSize;
+            foreach (var message in this.messageList)
+            {
+                var node = message.NodeIndex == -1 ? null : neighbour.GetNode(message.NodeIndex);
+                var edge = message.EdgeIndex == -1 ? null : neighbour.GetEdge(message.EdgeIndex);
+                var uNode = edge == null ? null : edge.UNode;
+                var vNode = edge == null ? null : edge.VNode;
 
+                switch (message.MessageDigit)
+                {
+                    case PlanningAlgorithmDigits.SelectNode:
+                        node.Background = Brushes.LightBlue;
+                        break;
+
+
+                    case PlanningAlgorithmDigits.SelectEdge:
+                        uNode.BorderColor = Brushes.Blue;
+                        vNode.BorderColor = Brushes.Blue;
+                        edge.LineColor = Brushes.Blue;
+
+                        uNode.BorderThickness = 2;
+                        vNode.BorderThickness = 2;
+                        edge.LineThickness = 2;
+                        break;
+
+
+                    case PlanningAlgorithmDigits.UpdateNode:
+                        node.Title = $"id = {(int)node.Tag}\nt = {message.DataList[0]}\nT = {message.DataList[1]}";
+                        node.TitleForeColor = Brushes.Blue;
+                        node.TitleFontSize = nodeTitleFontSize + 2;
+
+                        await Task.Delay(TimeSleep);
+
+                        node.TitleForeColor = Brushes.Black;
+                        node.TitleFontSize = nodeTitleFontSize;
+                        break;
+
+
+                    case PlanningAlgorithmDigits.DefaultEdge:
+                        uNode.BorderColor = Brushes.Black;
+                        vNode.BorderColor = Brushes.Black;
+                        edge.LineColor = Brushes.Black;
+
+                        uNode.BorderThickness = 1;
+                        vNode.BorderThickness = 1;
+                        edge.LineThickness = 1;
+                        break;
+
+
+                    case PlanningAlgorithmDigits.tComplete:
+                        foreach (var inode in this.nodeList)
+                        {
+                            inode.SetDefaultStatus();
+                        }
+                        break;
+                }
+
+                await Task.Delay(TimeSleep);
+            }
         }
     }
 }

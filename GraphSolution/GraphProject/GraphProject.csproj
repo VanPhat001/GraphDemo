@@ -70,6 +70,9 @@
     <Compile Include="AlgorithmsDemo\FloydWarshal\FloydWarshalDemo.cs" />
     <Compile Include="AlgorithmsDemo\FloydWarshal\FloydWarshalDigits.cs" />
     <Compile Include="AlgorithmsDemo\FloydWarshal\FloydWarshalMessage.cs" />
+    <Compile Include="AlgorithmsDemo\FordFulkerson\FordFulkersonDemo.cs" />
+    <Compile Include="AlgorithmsDemo\FordFulkerson\FordFulkersonDigits.cs" />
+    <Compile Include="AlgorithmsDemo\FordFulkerson\FordFulkersonMessage.cs" />
     <Compile Include="AlgorithmsDemo\Kruskal\KruskalDemo.cs" />
     <Compile Include="AlgorithmsDemo\Kruskal\KruskalDigits.cs" />
     <Compile Include="AlgorithmsDemo\Kruskal\KruskalMessage.cs" />
@@ -85,9 +88,12 @@
     <Compile Include="AlgorithmsDemo\TopoSort\TopoSortDemo.cs" />
     <Compile Include="AlgorithmsDemo\TopoSort\TopoSortDigits.cs" />
     <Compile Include="AlgorithmsDemo\TopoSort\TopoSortMessage.cs" />
+    <Compile Include="Converter\FlowGraphConverter.cs" />
     <Compile Include="MyListViewControl.cs" />
     <Compile Include="Structures\EdgeGraph.cs" />
     <Compile Include="Structures\EdgeInfo.cs" />
+    <Compile Include="Structures\FlowGraph.cs" />
+    <Compile Include="Structures\FlowLabel.cs" />
     <Compile Include="Structures\NeighbourhoodGraph.cs" />
     <Compile Include="Structures\NodeDegree.cs" />
     <Compile Include="Structures\PairNodeEdge.cs" />
@@ -137,8 +143,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AlgorithmsDemo\FordFulkerson\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

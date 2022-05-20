@@ -49,6 +49,8 @@
                 <Button Click="ButtonTopoSort_Click">Topo Sort</Button>
                 <Separator/>
                 <Button Click="ButtonPlanning_Click">Planning</Button>
+                <Separator/>
+                <Button Click="ButtonFordFulkerson_Click">Ford Fullkerson</Button>
             </ToolBar>
         </ToolBarTray>
 

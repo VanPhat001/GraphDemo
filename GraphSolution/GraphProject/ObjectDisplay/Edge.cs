@@ -44,6 +44,18 @@ namespace GraphProject.ObjectDisplay
             }
         }
 
+        public double TextFontSize
+        {
+            get => textBlock.FontSize;
+            set => textBlock.FontSize = value;
+        }
+
+        public Brush TextColor
+        {
+            get => textBlock.Foreground;
+            set => textBlock.Foreground = value;
+        }
+
         public Brush LineColor
         {
             get => line.Stroke;

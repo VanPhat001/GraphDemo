@@ -19,6 +19,7 @@ using GraphProject.AlgorithmsDemo.BFS;
 using GraphProject.AlgorithmsDemo.DFS;
 using GraphProject.AlgorithmsDemo.Dijkstra;
 using GraphProject.AlgorithmsDemo.FloydWarshal;
+using GraphProject.AlgorithmsDemo.FordFulkerson;
 using GraphProject.AlgorithmsDemo.Kruskal;
 using GraphProject.AlgorithmsDemo.PlanningAlgorithm;
 using GraphProject.AlgorithmsDemo.Prim;
@@ -41,7 +42,7 @@ namespace GraphProject
         private List<Node> nodeList;
         private List<Edge> edgeList;
         private bool isDirectedGraph;
-        public static int TimeSleep = 600;
+        public static int TimeSleep = 650;
         #endregion
 
         #region properties
@@ -709,6 +710,25 @@ namespace GraphProject
                 }
             });
         }
+
+        private async void ButtonFordFulkerson_Click(object sender, RoutedEventArgs e)
+        {
+            await ExecuteAlgorithm(async () =>
+            {
+                if (!isDirectedGraph)
+                {
+                    MessageBox.Show("Can't run algorithm with undirected graph");
+                }
+                else
+                {
+                    FordFulkersonDemo fordFulkerson = new FordFulkersonDemo(nodeList, edgeList);
+                    await fordFulkerson.Run();
+                    MessageBox.Show("finish");
+                }
+            });
+
+        }
         #endregion
+
     }
 }

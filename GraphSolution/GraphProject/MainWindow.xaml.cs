@@ -18,6 +18,7 @@ using GraphProject.AlgorithmsDemo.BellmanFord;
 using GraphProject.AlgorithmsDemo.BFS;
 using GraphProject.AlgorithmsDemo.DFS;
 using GraphProject.AlgorithmsDemo.Dijkstra;
+using GraphProject.AlgorithmsDemo.FloydWarshal;
 using GraphProject.AlgorithmsDemo.Kruskal;
 using GraphProject.AlgorithmsDemo.PlanningAlgorithm;
 using GraphProject.AlgorithmsDemo.Prim;
@@ -40,7 +41,7 @@ namespace GraphProject
         private List<Node> nodeList;
         private List<Edge> edgeList;
         private bool isDirectedGraph;
-        public static int TimeSleep = 100;
+        public static int TimeSleep = 600;
         #endregion
 
         #region properties
@@ -626,6 +627,16 @@ namespace GraphProject
                     MessageBox.Show("finish");
                     myListViewControl.SetHidden();
                 }
+            });
+        }
+
+        private async void ButtonFloydWarshal_Click(object sender, RoutedEventArgs e)
+        {
+            await ExecuteAlgorithm(async () =>
+            {
+                FloydWarshalDemo floyd = new FloydWarshalDemo(nodeList, edgeList, isDirectedGraph);
+                await floyd.Run(canvasMain);
+                MessageBox.Show("finish");             
             });
         }
 

@@ -41,6 +41,7 @@ namespace GraphProject.Structures
 
 
         #region methods
+        /// <summary>O(1) ~ O(n)</summary>
         public bool CheckAdjacent(int uIndex, int vIndex)
         {
             var p = neighbour[uIndex].Find((pair) => pair.NodeIndex == vIndex);
@@ -50,6 +51,7 @@ namespace GraphProject.Structures
 
 
         #region getters
+        /// <summary>O(1) ~ O(n)</summary>
         public List<int> GetNeighbourOf(int nodeIndex)
         {
             var temp = new List<int>();
@@ -60,22 +62,49 @@ namespace GraphProject.Structures
             return temp;
         }
 
+        /// <summary>O(1)</summary>
         public Node GetNode(int index)
         {
-            return this.nodeList[index];
+            try
+            {
+                return this.nodeList[index];
+            }
+            catch
+            {
+                return null;
+            }
         }
 
+        /// <summary>O(1)</summary>
         public Edge GetEdge(int index)
         {
-            return this.edgeList[index];
+            try
+            {
+                return this.edgeList[index];
+            }
+            catch
+            {
+                return null;
+            }
         }
 
+        /// <summary>O(1) ~ O(n) </summary>
         public Edge GetEdge(int uIndex, int vIndex)
         {
             PairNodeEdge pair = neighbour[uIndex].Find(nodeEdge => nodeEdge.NodeIndex == vIndex);
-            return this.edgeList[pair.EdgeIndex];
+            if (pair == null) return null;
+
+            try
+            {
+                return this.edgeList[pair.EdgeIndex];
+            }
+            catch
+            {
+                return null;
+            }
         }
 
+        /// <summary>O(1) ~ O(n)</summary>
         public int GetWeight(int uIndex, int vIndex)
         {
             try
@@ -88,6 +117,7 @@ namespace GraphProject.Structures
             }
         }
 
+        /// <summary>O(1)</summary>
         public int GetWeight(Edge edge)
         {
             try
@@ -100,6 +130,7 @@ namespace GraphProject.Structures
             }
         }
 
+        /// <summary>O(n)</summary>
         public int GetInDegree(int nodeIndex)
         {
             int count = 0;
@@ -113,11 +144,13 @@ namespace GraphProject.Structures
             return count;
         }
 
+        /// <summary>O(1)</summary>
         public int GetOutDegree(int nodeIndex)
         {
             return this.neighbour[nodeIndex].Count;
         }
 
+        /// <summary>O(n)</summary>
         public List<NodeDegree> GetListDegree()
         {
             List<NodeDegree> list = new List<NodeDegree>();

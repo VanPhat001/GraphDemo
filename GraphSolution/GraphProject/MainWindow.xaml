@@ -40,6 +40,8 @@
                 <Separator/>
                 <Button Click="ButtonBellmanFord_Click">Bellman Ford</Button>
                 <Separator/>
+                <Button Click="ButtonFloydWarshal_Click">Floyd Warshal</Button>
+                <Separator/>
                 <Button Click="ButtonKruskal_Click">Kruskal</Button>
                 <Separator/>
                 <Button Click="ButtonPrim_Click">Prim</Button>

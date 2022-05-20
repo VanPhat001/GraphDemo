@@ -67,6 +67,9 @@
     <Compile Include="AlgorithmsDemo\Dijkstra\DijkstraDemo.cs" />
     <Compile Include="AlgorithmsDemo\Dijkstra\DijkstraDigits.cs" />
     <Compile Include="AlgorithmsDemo\Dijkstra\DijkstraMessage.cs" />
+    <Compile Include="AlgorithmsDemo\FloydWarshal\FloydWarshalDemo.cs" />
+    <Compile Include="AlgorithmsDemo\FloydWarshal\FloydWarshalDigits.cs" />
+    <Compile Include="AlgorithmsDemo\FloydWarshal\FloydWarshalMessage.cs" />
     <Compile Include="AlgorithmsDemo\Kruskal\KruskalDemo.cs" />
     <Compile Include="AlgorithmsDemo\Kruskal\KruskalDigits.cs" />
     <Compile Include="AlgorithmsDemo\Kruskal\KruskalMessage.cs" />
@@ -135,7 +138,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AlgorithmsDemo\FloydWarshal\" />
     <Folder Include="AlgorithmsDemo\FordFulkerson\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

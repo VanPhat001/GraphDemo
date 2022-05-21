@@ -721,9 +721,11 @@ namespace GraphProject
                 }
                 else
                 {
-                    FordFulkersonDemo fordFulkerson = new FordFulkersonDemo(nodeList, edgeList);
+                    var myListViewControl = new MyListViewControl(lsbStatus);
+                    FordFulkersonDemo fordFulkerson = new FordFulkersonDemo(nodeList, edgeList, myListViewControl);
                     await fordFulkerson.Run();
                     MessageBox.Show("finish");
+                    myListViewControl.SetHidden();
                 }
             });
 

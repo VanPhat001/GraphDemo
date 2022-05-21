@@ -16,11 +16,13 @@ namespace GraphProject.AlgorithmsDemo.FordFulkerson
         private List<FlowLabel> lablels;
         private readonly static int oo = 999999;
         private readonly static int TimeSleep = MainWindow.TimeSleep;
+        private readonly MyListViewControl myListViewControl;
 
-        public FordFulkersonDemo(List<Node> nodeList, List<Edge> edgeList)
+        public FordFulkersonDemo(List<Node> nodeList, List<Edge> edgeList, MyListViewControl myListViewControl)
         {
             flowGraph = new FlowGraph(nodeList, edgeList);
             lablels = new List<FlowLabel>();
+            this.myListViewControl = myListViewControl;
         }
 
         private void Init()
@@ -62,14 +64,23 @@ namespace GraphProject.AlgorithmsDemo.FordFulkerson
                     lablels[i].SetValue(dir: FlowLableStatus.Nothing, parent: -1, flow: 0);
                 }
 
-                // [ShowLabel]
                 lablels[flowGraph.SourceIndex].SetValue(dir: FlowLableStatus.Increase, parent: flowGraph.SourceIndex, flow: oo);
                 Queue<int> queue = new Queue<int>();
                 queue.Enqueue(flowGraph.SourceIndex);
+
+                // [ClearAllQueue]
+                await ShowAnimation(new FordFulkersonMessage(FordFulkersonDigits.ClearAllQueue));
+
+                // [ShowLabel]
                 await ShowAnimation(new FordFulkersonMessage(
                     FordFulkersonDigits.ShowLabel,
                     nodeIndex: flowGraph.SourceIndex,
                     dataList: new List<object>() { new FlowLabel(lablels[flowGraph.SourceIndex]) }));
+
+                // [PushQueue]
+                await ShowAnimation(new FordFulkersonMessage(
+                    FordFulkersonDigits.PushQueue,
+                    dataList: new List<object>() { flowGraph.SourceIndex }));
                 #endregion
 
 
@@ -78,11 +89,17 @@ namespace GraphProject.AlgorithmsDemo.FordFulkerson
                 bool found = false;
                 while (queue.Count > 0)
                 {
-                    // [PickNode]
                     int uIndex = queue.Dequeue();
+
+                    // [PickNode]
                     await ShowAnimation(new FordFulkersonMessage(
                         FordFulkersonDigits.PickNode,
                         nodeIndex: uIndex));
+
+                    // [PopQueue]
+                    await ShowAnimation(new FordFulkersonMessage(
+                        FordFulkersonDigits.PopQueue,
+                        dataList: new List<object>() { uIndex }));
 
 
                     #region increase [u, v] step
@@ -107,15 +124,21 @@ namespace GraphProject.AlgorithmsDemo.FordFulkerson
                             var c = flowGraph.GetCapacity(uIndex, vIndex);
                             if (lablels[vIndex].Dir == FlowLableStatus.Nothing && f < c)
                             {
-                                // [ShowLabel]
                                 lablels[vIndex].SetValue(
                                     dir: FlowLableStatus.Increase, parent: uIndex,
                                     flow: Math.Min(lablels[uIndex].Flow, c - f));
                                 queue.Enqueue(vIndex);
+
+                                // [ShowLabel]
                                 await ShowAnimation(new FordFulkersonMessage(
                                     FordFulkersonDigits.ShowLabel,
                                     nodeIndex: vIndex,
                                     dataList: new List<object>() { new FlowLabel(lablels[vIndex]) }));
+
+                                // [PushQueue]
+                                await ShowAnimation(new FordFulkersonMessage(
+                                    FordFulkersonDigits.PushQueue,
+                                    dataList: new List<object>() { vIndex }));
                             }
 
                             // [DefaultEdge]
@@ -153,15 +176,21 @@ namespace GraphProject.AlgorithmsDemo.FordFulkerson
                             var f = flowGraph.GetFLow(xIndex, uIndex);
                             if (lablels[xIndex].Dir == FlowLableStatus.Nothing && f > 0)
                             {
-                                // [ShowLabel]
                                 lablels[xIndex].SetValue(
                                     dir: FlowLableStatus.Decrease, parent: uIndex,
                                     flow: Math.Min(lablels[uIndex].Flow, f));
                                 queue.Enqueue(xIndex);
+
+                                // [ShowLabel]
                                 await ShowAnimation(new FordFulkersonMessage(
                                     FordFulkersonDigits.ShowLabel,
                                     nodeIndex: xIndex,
                                     dataList: new List<object>() { new FlowLabel(lablels[xIndex]) }));
+
+                                // [PushQueue]
+                                await ShowAnimation(new FordFulkersonMessage(
+                                    FordFulkersonDigits.PushQueue,
+                                    dataList: new List<object>() { xIndex }));
                             }
 
 
@@ -294,6 +323,8 @@ namespace GraphProject.AlgorithmsDemo.FordFulkerson
         {
             Init();
 
+            this.myListViewControl.SetVisible();
+
             double max_flow = await FordFulkerson();
 
             await ShowAnimation(new FordFulkersonMessage(FordFulkersonDigits.STCut));
@@ -387,6 +418,32 @@ namespace GraphProject.AlgorithmsDemo.FordFulkerson
                         }
                         await Task.Delay(100);
                     }
+                    break;
+
+
+                case FordFulkersonDigits.PushQueue:
+                    this.myListViewControl.AddFirst(
+                        text: message.DataList[0].ToString(),
+                        textAlign: HorizontalAlignment.Center);
+                    this.myListViewControl.ChangeBackgroundItem(
+                        itemIndex: 0,
+                        color: Brushes.LightBlue);
+                    break;
+
+
+                case FordFulkersonDigits.PopQueue:
+                    this.myListViewControl.ChangeBackgroundItem(
+                        itemIndex: 0,
+                        color: Brushes.LightCoral);
+
+                    await Task.Delay(TimeSleep);
+
+                    this.myListViewControl.RemoveAt(0);
+                    break;
+
+
+                case FordFulkersonDigits.ClearAllQueue:
+                    this.myListViewControl.Clear();
                     break;
             }
 

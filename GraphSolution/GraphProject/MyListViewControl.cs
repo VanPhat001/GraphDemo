@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -22,9 +23,27 @@ namespace GraphProject
             this.listView.Items.Clear();
         }
 
-        public void AddText(string text)
+        public void RemoveAt(int index)
         {
-            this.listView.Items.Add(new ListViewItem() { Content = text });
+            this.listView.Items.RemoveAt(index);
+        }
+
+        public void AddFirst(string text, HorizontalAlignment textAlign = HorizontalAlignment.Left)
+        {
+            this.listView.Items.Insert(0, new ListViewItem()
+            {
+                Content = text,
+                HorizontalContentAlignment = textAlign
+            });
+        }
+
+        public void Append(string text, HorizontalAlignment textAlign = HorizontalAlignment.Left)
+        {
+            this.listView.Items.Add(new ListViewItem()
+            {
+                Content = text,
+                HorizontalAlignment = textAlign
+            });
         }
 
         public void ChangeBackgroundItem(int itemIndex, Brush color)

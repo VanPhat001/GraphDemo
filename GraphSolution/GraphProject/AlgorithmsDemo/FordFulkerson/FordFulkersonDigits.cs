@@ -15,6 +15,9 @@ namespace GraphProject.AlgorithmsDemo.FordFulkerson
         DefaultNode,
         UpdateEdge,
         ClearAllLabel,
-        STCut
+        STCut,
+        PushQueue,
+        PopQueue,
+        ClearAllQueue
     }
 }

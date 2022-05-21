@@ -81,8 +81,8 @@
                 />-->
 
             <ListView Name="lsbStatus" Width="85" Opacity="0" Background="White" >
-                <ListViewItem Background="LightBlue">1 -> 1 : 1</ListViewItem>
-                <ListViewItem Background="LightCoral">abcd</ListViewItem>
+                <!--<ListViewItem Background="LightBlue">1 -> 1 : 1</ListViewItem>
+                <ListViewItem Background="LightCoral">abcd</ListViewItem>-->
             </ListView>
         </Canvas>
     </DockPanel>

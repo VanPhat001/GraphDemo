@@ -49,7 +49,7 @@ namespace GraphProject.AlgorithmsDemo.BellmanFord
             for (int i = 0; i < edgeGraph.CountEdge; i++)
             {
                 var edgeInfo = edgeGraph.GetEdgeInfo(i);
-                myListViewControl.AddText($"{(int)edgeInfo.UNode.Tag} -> {(int)edgeInfo.VNode.Tag} : {edgeInfo.GetWeight()}");
+                myListViewControl.Append($"{(int)edgeInfo.UNode.Tag} -> {(int)edgeInfo.VNode.Tag} : {edgeInfo.GetWeight()}");
             }
         }
 

@@ -79,6 +79,11 @@
     <Compile Include="AlgorithmsDemo\PlanningAlgorithm\PlanningAlgorithmDemo.cs" />
     <Compile Include="AlgorithmsDemo\PlanningAlgorithm\PlanningAlgorithmDigits.cs" />
     <Compile Include="AlgorithmsDemo\PlanningAlgorithm\PlanningAlgorithmMessage.cs" />
+    <Compile Include="AlgorithmsDemo\PlanningAlgorithm\PlanningCostDigits.cs" />
+    <Compile Include="AlgorithmsDemo\PlanningAlgorithm\PlanningCostResult.cs" />
+    <Compile Include="AlgorithmsDemo\PlanningAlgorithm\PlanningCostWindow.xaml.cs">
+      <DependentUpon>PlanningCostWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AlgorithmsDemo\Prim\PrimDemo.cs" />
     <Compile Include="AlgorithmsDemo\Prim\PrimDigits.cs" />
     <Compile Include="AlgorithmsDemo\Prim\PrimMessage.cs" />
@@ -97,6 +102,10 @@
     <Compile Include="Structures\NeighbourhoodGraph.cs" />
     <Compile Include="Structures\NodeDegree.cs" />
     <Compile Include="Structures\PairNodeEdge.cs" />
+    <Page Include="AlgorithmsDemo\PlanningAlgorithm\PlanningCostWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

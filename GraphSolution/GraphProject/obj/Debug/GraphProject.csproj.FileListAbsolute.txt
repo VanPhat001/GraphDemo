@@ -14,3 +14,5 @@ C:\Users\Admin\Desktop\Csharp_Code\GraphSolution\GraphProject\obj\Debug\GraphPro
 C:\Users\Admin\Desktop\Csharp_Code\GraphSolution\GraphProject\obj\Debug\GraphProject.csproj.CoreCompileInputs.cache
 C:\Users\Admin\Desktop\Csharp_Code\GraphSolution\GraphProject\obj\Debug\GraphProject.exe
 C:\Users\Admin\Desktop\Csharp_Code\GraphSolution\GraphProject\obj\Debug\GraphProject.pdb
+C:\Users\Admin\Desktop\Csharp_Code\GraphSolution\GraphProject\obj\Debug\AlgorithmsDemo\PlanningAlgorithm\PlanningCostWindow.g.cs
+C:\Users\Admin\Desktop\Csharp_Code\GraphSolution\GraphProject\obj\Debug\AlgorithmsDemo\PlanningAlgorithm\PlanningCostWindow.baml

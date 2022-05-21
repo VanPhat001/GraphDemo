@@ -16,9 +16,9 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar Name="tlbOption">
-                <Button Name="btnOpen" Click="ButtonOpenFile_Click">Open file</Button>
+                <Button Name="btnOpen" Click="ButtonOpenFile_Click">Open</Button>
                 <Separator/>
-                <Button Name="btnSaveGraph" Click="btnSaveGraph_Click">Save graph</Button>
+                <Button Name="btnSaveGraph" Click="btnSaveGraph_Click">Save</Button>
                 <Separator/>                
                 <Button Click="ButtonChangeLocation_Click">Change location</Button>
                 <Separator/>

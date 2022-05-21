@@ -17,6 +17,7 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
         private List<PlanningAlgorithmMessage> messageList;
         private List<Node> nodeList;
         private List<Edge> edgeList;
+        private List<string> oddValue;
         private NeighbourhoodGraph neighbour;
         private TopoSortDemo topo;
         private Node alphaNode;
@@ -33,8 +34,12 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
             this.alphaNode = new Node(canvas, "alpha");
             this.betaNode = new Node(canvas, "beta");
             this.messageList = new List<PlanningAlgorithmMessage>();
+            this.oddValue = new List<string>();
 
             neighbour = new NeighbourhoodGraph(nodeList, edgeList, isDirectedGraph);
+
+            alphaNode.TitleForeColor = Brushes.Black;
+            betaNode.TitleForeColor = Brushes.Black;
 
             this.alphaNode.SetLocate(new Point(0, 0));
             this.betaNode.SetLocate(new Point(0, 0));
@@ -52,7 +57,7 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
 
                 if (nodeDegree.InDegree == 0)
                 {
-                    Edge aphaLink = new Edge(canvas, alphaNode, nodeList[i], "0");                   
+                    Edge aphaLink = new Edge(canvas, alphaNode, nodeList[i], "0");
                     this.edgeList.Add(aphaLink);
                 }
                 if (nodeDegree.OutDegree == 0)
@@ -62,8 +67,8 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
                 }
             }
 
-            nodeList.Add(alphaNode);
-            nodeList.Add(betaNode);
+            this.nodeList.Add(alphaNode);
+            this.nodeList.Add(betaNode);
 
             // update status
             neighbour = new NeighbourhoodGraph(this.nodeList, this.edgeList, isDirectedGraph: true);
@@ -85,6 +90,35 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
             nodeList.Remove(betaNode);
             alphaNode.Remove();
             betaNode.Remove();
+        }
+
+        private async Task ShowNodeID()
+        {
+            for (int i = 0; i < this.nodeList.Count; i++)
+            {
+                this.nodeList[i].Title = "id = " + i;
+                await Task.Delay(1);
+            }
+        }
+
+        private void SetNewEdgeText(List<double> results)
+        {
+            oddValue.Clear();
+            foreach (var edge in this.edgeList)
+            {
+                int uIndex = (int)edge.UNode.Tag;
+                oddValue.Add(edge.Text);
+                edge.Text = results[uIndex].ToString();
+            }
+        }
+
+        private void SetBackEdgeText()
+        {
+            foreach (var edge in this.edgeList)
+            {
+                int uIndex = (int)edge.UNode.Tag;
+                edge.Text = oddValue[uIndex];
+            }
         }
 
         private void InitTopo(Size windowSize)
@@ -124,6 +158,7 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
                 T[i] = oo;
             }
 
+            #region build t[]
             // build t[]
             foreach (int uIndex in orderNode)
             {
@@ -149,7 +184,7 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
                     {
                         // [UpdateNode]
                         this.messageList.Add(new PlanningAlgorithmMessage(
-                            PlanningAlgorithmDigits.UpdateNode, 
+                            PlanningAlgorithmDigits.UpdateNode,
                             nodeIndex: vIndex,
                             dataList: new List<int>() { t[vIndex], T[vIndex] }));
                     }
@@ -160,18 +195,20 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
                         edgeIndex: (int)edge.Tag));
                 }
             }
+            #endregion
+
 
             // [tComplete]
             this.messageList.Add(new PlanningAlgorithmMessage(PlanningAlgorithmDigits.tComplete));
 
-
+            #region build T[]
             // build T[]
             // [UpdateNode]
             T[(int)betaNode.Tag] = t[(int)betaNode.Tag];
             this.messageList.Add(new PlanningAlgorithmMessage(
-                PlanningAlgorithmDigits.UpdateNode, 
+                PlanningAlgorithmDigits.UpdateNode,
                 nodeIndex: (int)betaNode.Tag,
-                dataList: new List<int>() { t[(int)betaNode.Tag], T[(int)betaNode.Tag]}));
+                dataList: new List<int>() { t[(int)betaNode.Tag], T[(int)betaNode.Tag] }));
 
 
             for (int i = orderNode.Count - 1; i >= 0; i--)
@@ -212,31 +249,37 @@ namespace GraphProject.AlgorithmsDemo.PlanningAlgorithm
                     }
                 }
             }
-
-            // show result
-            //for (int i = 0; i < neighbour.CountNode; i++)
-            //{
-            //    var node = neighbour.GetNode(i);
-            //    node.Title = $"id = {(int)node.Tag}\nt = {t[i]}\nT = {T[i]}";
-            //}
+            #endregion
         }
 
         public async Task Run(Size windowSize)
         {
             InitTopo(windowSize);
+            await ShowNodeID();
 
-            topo = new TopoSortDemo(this.nodeList, this.edgeList, isDirectedGraph: true);
-            await topo.Run(windowSize);
+            PlanningCostWindow planningWindow = new PlanningCostWindow(this.neighbour.CountNode);
+            planningWindow.ShowDialog();
+            var resultData = planningWindow.Tag as PlanningCostResult;
+            if (resultData.Digit == PlanningCostDigits.Accept)            
+            {
+                SetNewEdgeText(resultData.Results);
+                topo = new TopoSortDemo(this.nodeList, this.edgeList, isDirectedGraph: true);
+                await topo.Run(windowSize);
 
-            InitPlanning();
+                InitPlanning();
+                PlanningAlgorithm(topo.Order);
 
-            PlanningAlgorithm(topo.Order);
+                await ShowAnimation();
+                await Task.Delay(1);
 
-            await ShowAnimation();
+                MessageBox.Show("finish");
+                SetBackEdgeText();
+            }
+            else
+            {
+                MessageBox.Show("can't not run this algorithm");
+            }
 
-            await Task.Delay(1);
-
-            MessageBox.Show("finish");
             RemoveAlphaBetaNode();
         }
 

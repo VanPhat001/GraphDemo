@@ -42,7 +42,7 @@ namespace GraphProject
         private List<Node> nodeList;
         private List<Edge> edgeList;
         private bool isDirectedGraph;
-        public static int TimeSleep = 650;
+        public static int TimeSleep = 100;
         #endregion
 
         #region properties

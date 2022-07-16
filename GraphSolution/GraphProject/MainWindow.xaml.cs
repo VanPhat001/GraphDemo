@@ -349,9 +349,16 @@ namespace GraphProject
         {
             // init test case
             //btnOpen.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
-            var fileName = @"D:\data.txt";
-            string[] lines = File.ReadAllLines(fileName);
-            ReadGraphFromText(lines, "file " + fileName);
+            try
+            {
+                var fileName = @"D:\data.txt";
+                string[] lines = File.ReadAllLines(fileName);
+                ReadGraphFromText(lines, "file " + fileName);
+            }
+            catch
+            {
+                MessageBox.Show("can't open this file");
+            }
         }
 
         private void Window_MouseDoubleClick_CreateNode(object sender, MouseButtonEventArgs e)
